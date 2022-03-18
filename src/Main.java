@@ -1,9 +1,9 @@
 
 public class Main {
 
-	GUI gui;
-	int fps = 144;
-	EntityManager entityManager;
+	private GUI gui;
+	private int fps = 144;
+	private EntityManager eManager;
 
 	public static void main(String args[]) {
 		new Main();
@@ -11,10 +11,13 @@ public class Main {
 
 	public Main() {
 		gui = new GUI();
-		entityManager = new EntityManager();
+		eManager = new EntityManager();
 		mainLoop();
 	}
 
+	/**
+	 * Main-Loop of the Game
+	 */
 	private void mainLoop() {
 		while (true) {
 			try {
@@ -22,7 +25,8 @@ public class Main {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			gui.drawingLoop();
+			gui.executeRender(eManager.getEntities(),eManager.getNumberE());
+			eManager.moveEntities();
 		}
 	}
 

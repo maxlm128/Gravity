@@ -1,27 +1,27 @@
 
 public class Entity {
-	float mass;
-	float radius;
+	float m;
+	float r;
 	Vector pos;
 	Vector vel;
 	
-	public Entity(float x, float y, float radius) {
+	public Entity(float x, float y, float r) {
 		pos = new Vector(x,y);
-		vel = new Vector(0,0);
-		this.radius = radius;
-		mass = (float) ((radius * radius) * Math.PI);
+		vel = new Vector(1,1);
+		this.r = r;
+		m = (float) ((r * r) * Math.PI);
 	}
 	
-	public Vector getPos() {
-		return pos;
+	/**
+	 * Moves the Entity by the vel-Vector
+	 */
+	public void move() {
+		pos.add(vel);
 	}
-	
-	public void setPos(float x, float y) {
-		pos.x = x;
-		pos.y = y;
-	}
-	
-	public void moveTo(Vector pos2) {
+	/**
+	 * Applies the Gravity and Collision-Detection to the Entity
+	 */
+	public void applyForces() {
 		
 	}
 }

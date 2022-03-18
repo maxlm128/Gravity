@@ -1,15 +1,16 @@
 
 public class EntityManager {
-	Entity[] e;
-	int lastIndex;
+	private Entity[] e;
+	private int lastIndex;
 
 	public EntityManager() {
 		e = new Entity[50];
+		newEntity(100,100,100);
 	}
 /**
  * Inserts a Entity into the Entity-Array and returs whether it was successful
- * @param x Position x of the Entity
- * @param y Position y of the Entity
+ * @param x Position of the Entity
+ * @param y Position of the Entity
  * @param r	Radius of the Entity
  * @return boolean if inserting was successful
  */
@@ -23,14 +24,35 @@ public class EntityManager {
 		}
 		return false;
 	}
-
 	/**
-	 * Returns the Entity at the given Index
-	 * @param i ,the Index
-	 * @return returns the Entity
- 	 */
-	public Entity getEntity(int i) {
-		return e[i];
+	 * Executes the move-Method of every Entity
+	 */
+	public void moveEntities() {
+		for(Entity e: e) {
+			if(e != null) {
+				e.move();
+			}
+		}
+	}
+	
+	/**
+	 * Returns a Array of all Entities in the Game
+	 * @return Entity-Array
+	 */
+	public Entity[] getEntities() {
+		return e;
+	}
+	/**
+	 * Returns the Number of total Entities in the Game
+	 * @return Integer
+	 */
+	public int getNumberE() {
+		for(int i = 0; i < e.length; i++) {
+			if(e[i] == null) {
+				return i;
+			}
+		}
+		return e.length;
 	}
 
 }
