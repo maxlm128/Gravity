@@ -1,4 +1,5 @@
 
+//Controller
 public class Main {
 
 	private GUI gui;
