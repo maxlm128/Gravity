@@ -4,7 +4,7 @@ public class Main {
 
 	private GUI gui;
 	private int fps = 144;
-	private EntityManager eManager;
+	static final int FACTOR = 100;
 
 	public static void main(String args[]) {
 		new Main();
@@ -12,7 +12,6 @@ public class Main {
 
 	public Main() {
 		gui = new GUI();
-		eManager = new EntityManager();
 		mainLoop();
 	}
 
@@ -26,8 +25,8 @@ public class Main {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			gui.executeRender(eManager.getEntities(),eManager.getNumberE());
-			eManager.moveEntities();
+			gui.executeRender(EManager.getI().getEntities(),EManager.getI().getNumberE());
+			EManager.getI().moveEntities();
 		}
 	}
 

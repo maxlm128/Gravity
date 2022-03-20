@@ -1,27 +1,36 @@
 
 //Controller
-public class EntityManager {
+public class EManager {
 	private Entity[] e;
 	private int lastIndex;
-
-	public EntityManager() {
-		e = new Entity[50];
-		newEntity(350, 300, 100);
-		newEntity(300, 350, 100);
+	private static EManager instance;
+	
+	public static EManager getI() {
+		if(instance == null) {
+			instance = new EManager();
+		}
+		return instance;
 	}
 
+	private EManager() {
+		e = new Entity[50];
+		newEntity(400, 300, 0, 0.2f, 75);
+		newEntity(700, 400, 0, 0.2f, 75);
+	}
+	
 	/**
 	 * Inserts a Entity into the Entity-Array and returs whether it was successful
+	 * 
 	 * @param x Position of the Entity
 	 * @param y Position of the Entity
 	 * @param r Radius of the Entity
 	 * @return boolean if inserting was successful
 	 */
-	public boolean newEntity(float x, float y, float r) {
+	public boolean newEntity(float x, float y, float vx, float vy, float r) {
 		for (int i = 0; i < e.length; i++) {
 			int a = (i + lastIndex) % e.length;
 			if (e[a] == null) {
-				e[a] = new Entity(x, y, r, this);
+				e[a] = new Entity(x * Main.FACTOR, y * Main.FACTOR, r * Main.FACTOR, vx * Main.FACTOR, vy * Main.FACTOR);
 				return true;
 			}
 		}
@@ -41,6 +50,7 @@ public class EntityManager {
 
 	/**
 	 * Returns a Array of all Entities in the Game
+	 * 
 	 * @return Entity-Array
 	 */
 	public Entity[] getEntities() {
@@ -53,6 +63,7 @@ public class EntityManager {
 
 	/**
 	 * Returns the Number of total Entities in the Game
+	 * 
 	 * @return Integer
 	 */
 	public int getNumberE() {
