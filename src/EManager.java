@@ -4,9 +4,9 @@ public class EManager {
 	private Entity[] e;
 	private int lastIndex;
 	private static EManager instance;
-	
+
 	public static EManager getI() {
-		if(instance == null) {
+		if (instance == null) {
 			instance = new EManager();
 		}
 		return instance;
@@ -14,10 +14,10 @@ public class EManager {
 
 	private EManager() {
 		e = new Entity[50];
-		newEntity(400, 300, 0, 0.2f, 75);
-		newEntity(700, 400, 0, 0.2f, 75);
+		newEntity(250000, 250000, 125000f, 0, 10000);
+		newEntity(250000, 100000, -125000f, 0, 10000);
 	}
-	
+
 	/**
 	 * Inserts a Entity into the Entity-Array and returs whether it was successful
 	 * 
@@ -30,7 +30,7 @@ public class EManager {
 		for (int i = 0; i < e.length; i++) {
 			int a = (i + lastIndex) % e.length;
 			if (e[a] == null) {
-				e[a] = new Entity(x * Main.FACTOR, y * Main.FACTOR, r * Main.FACTOR, vx * Main.FACTOR, vy * Main.FACTOR);
+				e[a] = new Entity(x, y, r, vx / (float) Main.FPS, vy / (float) Main.FPS);
 				return true;
 			}
 		}

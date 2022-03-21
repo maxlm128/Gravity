@@ -3,8 +3,7 @@
 public class Main {
 
 	private GUI gui;
-	private int fps = 144;
-	static final int FACTOR = 100;
+	static int FPS = 144;
 
 	public static void main(String args[]) {
 		new Main();
@@ -21,11 +20,11 @@ public class Main {
 	private void mainLoop() {
 		while (true) {
 			try {
-				Thread.sleep(1000 / fps);
+				Thread.sleep(1000 / FPS);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			gui.executeRender(EManager.getI().getEntities(),EManager.getI().getNumberE());
+			gui.executeRender(EManager.getI().getEntities(), EManager.getI().getNumberE());
 			EManager.getI().moveEntities();
 		}
 	}

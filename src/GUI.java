@@ -12,8 +12,10 @@ public class GUI extends JPanel {
 	private int numberE;
 	private final int WIDTH = 1440;
 	private final int HEIGHT = 1080;
+	private float scale;
 
 	public GUI() {
+		scale = 0.002f;
 		JFrame jFrame = new JFrame();
 		jFrame.add(this);
 		jFrame.setSize(WIDTH, HEIGHT);
@@ -35,9 +37,8 @@ public class GUI extends JPanel {
 		g2d.drawString("Entities: " + numberE, 1, 10);
 		if (e != null) {
 			for (Entity e : e) {
-				g2d.fillOval((int) (e.pos.x / Main.FACTOR - e.r / Main.FACTOR / 2),
-						Math.round(e.pos.y / Main.FACTOR - e.r / Main.FACTOR / 2), (int) e.r * 2 / Main.FACTOR,
-						(int) e.r * 2 / Main.FACTOR);
+				g2d.fillOval((int) ((e.pos.x - e.r / 2) * scale), Math.round((e.pos.y - e.r / 2) * scale),
+						(int) (e.r * 2 * scale), (int) (e.r * 2 * scale));
 			}
 		}
 	}
@@ -45,7 +46,7 @@ public class GUI extends JPanel {
 	/**
 	 * executes the render with Parameters, which are displayed in the Frame
 	 * 
-	 * @param e       ,Entity-Array of all Entities
+	 * @param e ,Entity-Array of all Entities
 	 * @param numberE ,Number of Total Entities
 	 */
 	public void executeRender(Entity[] e, int numberE) {
