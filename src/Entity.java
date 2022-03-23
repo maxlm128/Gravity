@@ -13,8 +13,7 @@ public class Entity {
 		acc = new Vector(0, 0);
 		this.r = r;
 		//Density of an average neutron star
-		m = (float) (Math.PI * Math.pow(this.r, 2) * 1E13);
-		System.out.println(m);
+		m = (float) (Math.PI * Math.pow(this.r, 2) * 2E14);
 	}
 
 	/**
@@ -36,7 +35,7 @@ public class Entity {
 		for (Entity e : EManager.getI().getEntities()) {
 			if (e != this) {
 				float G = 6.673e-11f;
-				acc.add(pos.sub(e.pos).n().mul((float) (G * e.m / Math.pow((pos.sub(e.pos).l()), 2))));
+				acc.add(pos.sub(e.pos).n().mul((float) (G * e.m / Math.pow((pos.sub(e.pos).l()), 2)) / Main.FPS));
 			}
 		}
 	}

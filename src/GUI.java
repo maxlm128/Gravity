@@ -12,11 +12,14 @@ public class GUI extends JPanel {
 	private int numberE;
 	private final int WIDTH = 1440;
 	private final int HEIGHT = 1080;
-	private float scale;
+	private Camera c;
 
-	public GUI() {
-		scale = 0.002f;
+	public GUI(Listener l) {
+		c = new Camera();
 		JFrame jFrame = new JFrame();
+		jFrame.addMouseListener(l);
+		jFrame.addMouseMotionListener(l);
+		jFrame.addMouseWheelListener(l);
 		jFrame.add(this);
 		jFrame.setSize(WIDTH, HEIGHT);
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,18 +38,17 @@ public class GUI extends JPanel {
 		g2d.fillRect(0, 0, WIDTH, HEIGHT);
 		g2d.setColor(Color.WHITE);
 		g2d.drawString("Entities: " + numberE, 1, 10);
-		if (e != null) {
-			for (Entity e : e) {
-				g2d.fillOval((int) ((e.pos.x - e.r / 2) * scale), Math.round((e.pos.y - e.r / 2) * scale),
-						(int) (e.r * 2 * scale), (int) (e.r * 2 * scale));
-			}
+		for (Entity e : e) {
+			g2d.fillOval((int) ((e.pos.x - e.r / 2 + c.pos.x) * c.scale) + WIDTH / 2,
+					Math.round((e.pos.y - e.r / 2 + c.pos.y) * c.scale) + HEIGHT / 2, (int) (e.r * 2 * c.scale),
+					(int) (e.r * 2 * c.scale));
 		}
 	}
 
 	/**
 	 * executes the render with Parameters, which are displayed in the Frame
 	 * 
-	 * @param e ,Entity-Array of all Entities
+	 * @param e       ,Entity-Array of all Entities
 	 * @param numberE ,Number of Total Entities
 	 */
 	public void executeRender(Entity[] e, int numberE) {
@@ -55,4 +57,7 @@ public class GUI extends JPanel {
 		repaint();
 	}
 
+	public Camera getCamera() {
+		return c;
+	}
 }

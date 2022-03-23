@@ -3,6 +3,7 @@
 public class Main {
 
 	private GUI gui;
+	private Listener l;
 	static int FPS = 144;
 
 	public static void main(String args[]) {
@@ -10,7 +11,8 @@ public class Main {
 	}
 
 	public Main() {
-		gui = new GUI();
+		l = new Listener();
+		gui = new GUI(l);
 		mainLoop();
 	}
 
@@ -26,6 +28,8 @@ public class Main {
 			}
 			gui.executeRender(EManager.getI().getEntities(), EManager.getI().getNumberE());
 			EManager.getI().moveEntities();
+			gui.getCamera().moveCamera(l.getMouseMovement());
+			gui.getCamera().zoomCamera(l.getScrollAmount());
 		}
 	}
 

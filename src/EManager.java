@@ -14,8 +14,8 @@ public class EManager {
 
 	private EManager() {
 		e = new Entity[50];
-		newEntity(250000, 250000, 125000f, 0, 10000);
-		newEntity(250000, 100000, -125000f, 0, 10000);
+		newEntity(250000, 250000, 70000f, 0, 10000);
+		newEntity(250000, 200000, -70000f, 0, 10000);
 	}
 
 	/**
