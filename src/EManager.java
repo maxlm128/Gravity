@@ -2,6 +2,8 @@
 //Controller
 public class EManager {
 	private Entity[] e;
+	//TODO: Do Mouse Gravity
+	private Entity mouse;
 	private int lastIndex;
 	private static EManager instance;
 
@@ -13,9 +15,9 @@ public class EManager {
 	}
 
 	private EManager() {
-		e = new Entity[50];
-		newEntity(250000, 250000, 70000f, 0, 10000);
-		newEntity(250000, 200000, -70000f, 0, 10000);
+		e = new Entity[500];
+		newEntity(0, 0, 0, 0, 10000);
+		newEntity(0, 100000, 1000, 0, 10000);
 	}
 
 	/**
@@ -30,20 +32,33 @@ public class EManager {
 		for (int i = 0; i < e.length; i++) {
 			int a = (i + lastIndex) % e.length;
 			if (e[a] == null) {
-				e[a] = new Entity(x, y, r, vx / (float) Main.FPS, vy / (float) Main.FPS);
+				e[a] = new Entity(x, y, r, vx, vy);
 				return true;
 			}
 		}
 		return false;
 	}
 
+	public void deleteAllEntities() {
+		e = new Entity[50];
+	}
+
 	/**
-	 * Executes the move-Method of every Entity
+	 * Executes the move-Method of every Entity STEPS times
 	 */
-	public void moveEntities() {
-		for (Entity e : e) {
-			if (e != null) {
-				e.move();
+	public void moveEntities(float dt) {
+		for (int i = 0; i < Main.STEPS; i++) {
+			for (Entity e : e) {
+				if (e != null) {
+					e.move(dt / Main.STEPS);
+				}
+			}
+		}
+		if(Main.TRAILS) {
+			for (Entity e : e) {
+				if (e != null) {
+					e.manageTrail();
+				}
 			}
 		}
 	}

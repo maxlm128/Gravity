@@ -31,25 +31,20 @@ public class Vector {
 	}
 
 	/**
-	 * Multiplies the Vector by the given multiplier
+	 * Scales the Vector by the given multiplier
 	 * 
 	 * @param mul ,the float multiplier
 	 * @return This Vector
 	 */
-	public Vector mul(float mul) {
+	public Vector scl(float mul) {
 		x = (float) (x * mul);
 		y = (float) (y * mul);
 		return this;
 	}
 
-	public float mulV(Vector vec2) {
-		return x * vec2.x + y * vec2.y;
-	}
-
 	/**
 	 * normalizes the Vector
 	 * 
-	 * @return Vector
 	 * @return This Vector
 	 */
 	public Vector n() {
@@ -84,18 +79,16 @@ public class Vector {
 	public Vector copy() {
 		return new Vector(x, y);
 	}
+	
 
 	/**
-	 * Applies the average Vector of this and the second Vector
-	 * 
-	 * @param vec2 ,the second Vector
+	 * Rotates this vector by 90 degrees clockwise
+	 * @return this vector
 	 */
-	public void avg(Vector vec2) {
-		float temp = (x + vec2.x) / 2;
-		x = temp;
-		vec2.x = temp;
-		temp = (y + vec2.y) / 2;
-		y = temp;
-		vec2.y = temp;
+	public Vector rotate90() {
+	 float tx = x;
+	 x = y;
+	 y = -tx;
+	 return this;
 	}
 }

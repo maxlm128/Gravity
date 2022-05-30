@@ -1,7 +1,7 @@
 import java.awt.Color;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -10,8 +10,9 @@ public class GUI extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private Entity[] e;
 	private int numberE;
-	private final int WIDTH = 1440;
-	private final int HEIGHT = 1080;
+	private Error err;
+	static protected final int WIDTH = 1440;
+	static protected final int HEIGHT = 1080;
 	private Camera c;
 
 	public GUI(Listener l) {
@@ -39,10 +40,33 @@ public class GUI extends JPanel {
 		g2d.setColor(Color.WHITE);
 		g2d.drawString("Entities: " + numberE, 1, 10);
 		for (Entity e : e) {
-			g2d.fillOval((int) ((e.pos.x - e.r / 2 + c.pos.x) * c.scale) + WIDTH / 2,
-					Math.round((e.pos.y - e.r / 2 + c.pos.y) * c.scale) + HEIGHT / 2, (int) (e.r * 2 * c.scale),
+			g2d.fillOval(Math.round((e.pos.x - e.r + c.pos.x) * c.scale) + WIDTH / 2,
+					Math.round((e.pos.y - e.r + c.pos.y) * c.scale) + HEIGHT / 2, (int) (e.r * 2 * c.scale),
 					(int) (e.r * 2 * c.scale));
+			for (int i = 0; i < e.trail.length; i++) {
+				int index = (i + e.trailIndex) % (e.trail.length - 1);
+				if(e.trail[index][0] != 0f && e.trail[index][1] != 0f) {
+					g2d.drawLine(Math.round((e.trail[index][0] + c.pos.x) * c.scale) + WIDTH / 2,
+							Math.round((e.trail[index][1] + c.pos.y) * c.scale) + HEIGHT / 2,
+							Math.round((e.trail[index][0] + c.pos.x) * c.scale) + WIDTH / 2,
+							Math.round((e.trail[index][1] + c.pos.y) * c.scale) + HEIGHT / 2);
+				}
+			}
 		}
+		if (err != null) {
+			g2d.drawString("Error: " + err.err, 1, 20);
+			if (err.isOlderThan(5000)) {
+				err = null;
+			}
+		}
+	}
+
+	/**
+	 * Draws an Error on the screen
+	 * @param err ,a class Error
+	 */
+	public void drawErr(String err) {
+		this.err = new Error(err);
 	}
 
 	/**
@@ -57,6 +81,10 @@ public class GUI extends JPanel {
 		repaint();
 	}
 
+	/**
+	 * Returns the Camera Object of the GUI
+	 * @return ,a Object of the type Camera
+	 */
 	public Camera getCamera() {
 		return c;
 	}

@@ -1,4 +1,3 @@
-import java.awt.MouseInfo;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -8,13 +7,15 @@ import java.awt.event.MouseWheelListener;
 //Controller
 public class Listener implements MouseListener, MouseMotionListener, MouseWheelListener {
 
-	private Vector lastPos;
+	private Vector lastDragPos;
 	private Vector mov;
-	private boolean pressed;
+	private Vector rightClickPos;
+	private int lastButton;
 	private int scroll;
 
 	public Listener() {
-		lastPos = new Vector(0, 0);
+		lastDragPos = new Vector(0, 0);
+		rightClickPos = new Vector(0, 0);
 		mov = new Vector(0, 0);
 	}
 
@@ -24,14 +25,24 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		lastPos.x = e.getX();
-		lastPos.y = e.getY();
-		pressed = true;
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			lastDragPos.x = e.getX();
+			lastDragPos.y = e.getY();
+			lastButton = MouseEvent.BUTTON1;
+		} else if (e.getButton() == MouseEvent.BUTTON3) {
+			rightClickPos.x = e.getX();
+			rightClickPos.y = e.getY();
+			lastButton = MouseEvent.BUTTON3;
+		} else if (e.getButton() == MouseEvent.BUTTON2) {
+			lastButton = MouseEvent.BUTTON2;
+		} else if (e.getButton() == 4) {
+			lastButton = 4;
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		pressed = false;
+		lastButton = 0;
 	}
 
 	@Override
@@ -44,10 +55,10 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (pressed) {
-			mov.add(lastPos.sub(new Vector(e.getX(), e.getY())));
-			lastPos.x = e.getX();
-			lastPos.y = e.getY();
+		if (lastButton == MouseEvent.BUTTON1) {
+			mov.add(lastDragPos.sub(new Vector(e.getX(), e.getY())));
+			lastDragPos.x = e.getX();
+			lastDragPos.y = e.getY();
 		}
 	}
 
@@ -57,7 +68,11 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		scroll += e.getUnitsToScroll();
+		scroll += e.getUnitsToScroll() * 3;
+	}
+	
+	public int getLastButton() {
+		return lastButton;
 	}
 
 	public Vector getMouseMovement() {
@@ -70,6 +85,14 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 		int temp = scroll;
 		scroll = 0;
 		return temp;
+	}
+
+	public Vector getRightClickPosition() {
+		if (lastButton == MouseEvent.BUTTON3) {
+			lastButton = 0;
+			return rightClickPos.copy();
+		}
+		return null;
 	}
 
 }
