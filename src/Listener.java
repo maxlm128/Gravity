@@ -9,13 +9,15 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 
 	private Vector lastDragPos;
 	private Vector mov;
-	private Vector rightClickPos;
+	private Vector mousePos;
 	private int lastButton;
 	private int scroll;
+	private Main m;
 
-	public Listener() {
+	public Listener(Main m) {
+		this.m = m;
 		lastDragPos = new Vector(0, 0);
-		rightClickPos = new Vector(0, 0);
+		mousePos = new Vector(0, 0);
 		mov = new Vector(0, 0);
 	}
 
@@ -30,8 +32,6 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 			lastDragPos.y = e.getY();
 			lastButton = MouseEvent.BUTTON1;
 		} else if (e.getButton() == MouseEvent.BUTTON3) {
-			rightClickPos.x = e.getX();
-			rightClickPos.y = e.getY();
 			lastButton = MouseEvent.BUTTON3;
 		} else if (e.getButton() == MouseEvent.BUTTON2) {
 			lastButton = MouseEvent.BUTTON2;
@@ -60,10 +60,13 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 			lastDragPos.x = e.getX();
 			lastDragPos.y = e.getY();
 		}
+		m.reactToInput(getLastButton());
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		mousePos.x = e.getX();
+		mousePos.y = e.getY();
 	}
 
 	@Override
@@ -71,26 +74,42 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 		scroll += e.getUnitsToScroll() * 3;
 	}
 	
+	/**
+	 * Returns the last Button pressed in form of an ID
+	 * @return a Integer
+	 */
 	public int getLastButton() {
 		return lastButton;
 	}
 
+	/**
+	 * Returns a directional Vector of the movement since the last time the method was executed
+	 * @return a Vector
+	 */
 	public Vector getMouseMovement() {
 		Vector temp = mov.copy();
 		mov.reset();
 		return temp;
 	}
 
+	/**
+	 * Returns the amount scrolled since the last time the method was executed
+	 * @return a Integer
+	 */
 	public int getScrollAmount() {
 		int temp = scroll;
 		scroll = 0;
 		return temp;
 	}
 
-	public Vector getRightClickPosition() {
+	/**
+	 * Returns the current position of the Mouse in form of a Vector
+	 * @return a Vector
+	 */
+	public Vector getMousePosition() {
 		if (lastButton == MouseEvent.BUTTON3) {
 			lastButton = 0;
-			return rightClickPos.copy();
+			return mousePos.copy();
 		}
 		return null;
 	}

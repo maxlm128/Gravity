@@ -8,8 +8,8 @@ import javax.swing.JPanel;
 //View
 public class GUI extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private Entity[] e;
-	private int numberE;
+	private Particle[] p;
+	private int numberP;
 	private Error err;
 	static protected final int WIDTH = 1440;
 	static protected final int HEIGHT = 1080;
@@ -38,18 +38,24 @@ public class GUI extends JPanel {
 		g2d.setColor(Color.BLACK);
 		g2d.fillRect(0, 0, WIDTH, HEIGHT);
 		g2d.setColor(Color.WHITE);
-		g2d.drawString("Entities: " + numberE, 1, 10);
-		for (Entity e : e) {
-			g2d.fillOval(Math.round((e.pos.x - e.r + c.pos.x) * c.scale) + WIDTH / 2,
-					Math.round((e.pos.y - e.r + c.pos.y) * c.scale) + HEIGHT / 2, (int) (e.r * 2 * c.scale),
-					(int) (e.r * 2 * c.scale));
-			for (int i = 0; i < e.trail.length; i++) {
-				int index = (i + e.trailIndex) % (e.trail.length - 1);
-				if(e.trail[index][0] != 0f && e.trail[index][1] != 0f) {
-					g2d.drawLine(Math.round((e.trail[index][0] + c.pos.x) * c.scale) + WIDTH / 2,
-							Math.round((e.trail[index][1] + c.pos.y) * c.scale) + HEIGHT / 2,
-							Math.round((e.trail[index][0] + c.pos.x) * c.scale) + WIDTH / 2,
-							Math.round((e.trail[index][1] + c.pos.y) * c.scale) + HEIGHT / 2);
+		g2d.drawString("Entities: " + numberP, 1, 10);
+		for (Particle p : p) {
+			g2d.fillOval(Math.round((p.pos.x - p.r + c.pos.x) * c.scale) + WIDTH / 2,
+					Math.round((p.pos.y - p.r + c.pos.y) * c.scale) + HEIGHT / 2, (int) (p.r * 2 * c.scale),
+					(int) (p.r * 2 * c.scale));
+			g2d.drawLine(Math.round((p.pos.x + c.pos.x) * c.scale) + WIDTH / 2,
+					Math.round((p.pos.y + c.pos.y) * c.scale) + HEIGHT / 2,
+					Math.round((p.pos.x + c.pos.x) * c.scale) + WIDTH / 2,
+					Math.round((p.pos.y + c.pos.y) * c.scale) + HEIGHT / 2);
+			if (Main.TRAILS) {
+				for (int i = 0; i < p.trail.length; i++) {
+					int index = (i + p.trailIndex) % (p.trail.length - 1);
+					if (p.trail[index][0] != 0f && p.trail[index][1] != 0f) {
+						g2d.drawLine(Math.round((p.trail[index][0] + c.pos.x) * c.scale) + WIDTH / 2,
+								Math.round((p.trail[index][1] + c.pos.y) * c.scale) + HEIGHT / 2,
+								Math.round((p.trail[index][0] + c.pos.x) * c.scale) + WIDTH / 2,
+								Math.round((p.trail[index][1] + c.pos.y) * c.scale) + HEIGHT / 2);
+					}
 				}
 			}
 		}
@@ -63,6 +69,7 @@ public class GUI extends JPanel {
 
 	/**
 	 * Draws an Error on the screen
+	 * 
 	 * @param err ,a class Error
 	 */
 	public void drawErr(String err) {
@@ -75,14 +82,15 @@ public class GUI extends JPanel {
 	 * @param e       ,Entity-Array of all Entities
 	 * @param numberE ,Number of Total Entities
 	 */
-	public void executeRender(Entity[] e, int numberE) {
-		this.e = e;
-		this.numberE = numberE;
+	public void executeRender(Particle[] p, int numberP) {
+		this.p = p;
+		this.numberP = numberP;
 		repaint();
 	}
 
 	/**
 	 * Returns the Camera Object of the GUI
+	 * 
 	 * @return ,a Object of the type Camera
 	 */
 	public Camera getCamera() {
