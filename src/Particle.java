@@ -6,10 +6,10 @@ public class Particle extends Entity {
 	float[][] trail;
 	int trailIndex;
 
-	public Particle(float x, float y, float m, float r, float vx, float vy) {
-		super(x, y, m);
+	public Particle(float x, float y, float m, float r, float vx, float vy, EManager eM) {
+		super(x, y, m, eM);
 		vel = new Vector(vx, vy);
-		if(Main.TRAILS) {
+		if (Main.TRAILS) {
 			trail = new float[Main.FPS * 200][2];
 		}
 		this.r = r;
@@ -29,7 +29,7 @@ public class Particle extends Entity {
 	 * and applies the accelleration to the Vector acc using the Runge-Kutta-Method
 	 */
 	private void calcGravity(float dt) {
-		for (Entity e : EManager.getI().getEntities()) {
+		for (Entity e : eM.getEntities()) {
 			if (e != this) {
 //					Vector nextPos = pos.copy().add(vel);
 //					Vector vel1 = vel.copy().add(
@@ -38,7 +38,7 @@ public class Particle extends Entity {
 //							.scl((float) (G * e.m / Math.pow((nextPos.sub(e.pos).l()), 2))));
 //					vel.x = (vel1.x + vel2.x) / 2;
 //					vel.y = (vel1.y + vel2.y) / 2;
-//					
+
 //					EULER:
 				vel.add(pos.sub(e.pos).n().scl((float) (G * e.m / Math.pow((pos.sub(e.pos).l()), 2))).scl(dt));
 
@@ -65,14 +65,15 @@ public class Particle extends Entity {
 	 * collision if they are colliding
 	 */
 	private void resolveCollision() {
-		for (Particle p : EManager.getI().getParticles()) {
+		for (Particle p : eM.getParticles()) {
 			if (p != this && pos.sub(p.pos).l() <= p.r + r) {
 				Vector d = pos.sub(p.pos).n().scl(p.r + r - pos.sub(p.pos).l()).scl(0.5f);
+//				Vector d = pos.sub(p.pos).n().scl(50000 / pos.sub(p.pos).l());
 				p.pos.add(d);
 				pos.add(d.scl(-1));
 			}
 		}
-		for (Particle p: EManager.getI().getParticles()) {
+		for (Particle p : eM.getParticles()) {
 			// Distance between balls
 			if (p != this && pos.sub(p.pos).l() <= p.r + r) {
 				float fDistance = pos.sub(p.pos).l();
@@ -102,28 +103,6 @@ public class Particle extends Entity {
 				vel.y = ty * dpTan1 + ny * m1;
 				p.vel.x = tx * dpTan2 + nx * m2;
 				p.vel.y = ty * dpTan2 + ny * m2;
-
-				// Reduction of speed because of friction
-				// Vector between Entities
-//				Vector r = pos.sub(e.pos).n();
-//				
-//				Vector velC = vel.copy().n();
-//				
-//				//Dot Product between vel and r
-//				float dotPrdc = velC.x * r.x + velC.y * r.y;
-//				
-//				if(dotPrdc < 0) {
-//					dotPrdc *= -1;
-//				}
-//				System.out.println(dotPrdc);
-//				
-//				//Scale r by the dot product
-//				if(Math.round(dotPrdc) != 0) {
-//					r.scl(dotPrdc * 1000);
-//				}
-//				
-//				//Apply r on the velocity
-//				vel.add(r);
 			}
 		}
 	}

@@ -73,17 +73,24 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		scroll += e.getUnitsToScroll() * 3;
 	}
-	
+
 	/**
 	 * Returns the last Button pressed in form of an ID
+	 * 
 	 * @return a Integer
 	 */
 	public int getLastButton() {
+		if (lastButton == 4) {
+			lastButton = 0;
+			return 4;
+		}
 		return lastButton;
 	}
 
 	/**
-	 * Returns a directional Vector of the movement since the last time the method was executed
+	 * Returns a directional Vector of the movement since the last time the method
+	 * was executed
+	 * 
 	 * @return a Vector
 	 */
 	public Vector getMouseMovement() {
@@ -94,6 +101,7 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 
 	/**
 	 * Returns the amount scrolled since the last time the method was executed
+	 * 
 	 * @return a Integer
 	 */
 	public int getScrollAmount() {
@@ -104,14 +112,14 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 
 	/**
 	 * Returns the current position of the Mouse in form of a Vector
+	 * 
 	 * @return a Vector
 	 */
 	public Vector getMousePosition() {
 		if (lastButton == MouseEvent.BUTTON3) {
 			lastButton = 0;
-			return mousePos.copy();
 		}
-		return null;
+		return mousePos.copy();
 	}
 
 }

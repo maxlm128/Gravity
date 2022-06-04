@@ -1,38 +1,37 @@
 
 //Controller
 public class EManager {
-	private Entity[] e;
+	private Particle[] p;
 	private Entity mouse;
+	private final int PARTICLE_LIMIT = 5000;
+	boolean mouseGravity;
 	private int lastIndex;
-	private static EManager instance;
 
-	public static EManager getI() {
-		if (instance == null) {
-			instance = new EManager();
-		}
-		return instance;
-	}
-
-	private EManager() {
-		e = new Entity[5000];
-		//Density of a Neutron Star
-		newParticle(0, 0,(float) (Math.PI * Math.pow(10000, 2) * 2E14), 10000, 0, 0);
-		newParticle(0, 100000,(float) (Math.PI * Math.pow(10000, 2) * 2E14), 10000, 0, 0);
+	public EManager() {
+		mouseGravity = false;
+		mouse = new Entity(0, 0, 1E25f, this);
+		p = new Particle[PARTICLE_LIMIT];
+		// Density of a Neutron Star
+		newParticle(0, 0, (float) (Math.PI * Math.pow(10000, 2) * 2E14), 10000, 0, 0);
+		newParticle(0, 100000, (float) (Math.PI * Math.pow(10000, 2) * 2E14), 10000, 0, 0);
 	}
 
 	/**
 	 * Inserts a Entity into the Entity-Array and returs whether it was successful
 	 * 
-	 * @param x Position of the Entity
-	 * @param y Position of the Entity
-	 * @param r Radius of the Entity
+	 * @param x  Position of the Particle
+	 * @param y  Position of the Particle
+	 * @param m  Mass of the Particle
+	 * @param r  Radius of the Particle
+	 * @param vx Velocity of the Particle
+	 * @param vy Velocity of the Particle
 	 * @return boolean if inserting was successful
 	 */
 	public boolean newParticle(float x, float y, float m, float r, float vx, float vy) {
-		for (int i = 0; i < e.length; i++) {
-			int a = (i + lastIndex) % e.length;
-			if (e[a] == null) {
-				e[a] = new Particle(x, y, m, r, vx, vy);
+		for (int i = 0; i < p.length; i++) {
+			int a = (i + lastIndex) % p.length;
+			if (p[a] == null) {
+				p[a] = new Particle(x, y, m, r, vx, vy, this);
 				return true;
 			}
 		}
@@ -40,11 +39,12 @@ public class EManager {
 	}
 
 	public void deleteAllEntities() {
-		e = new Entity[50];
+		p = new Particle[PARTICLE_LIMIT];
 	}
 
 	/**
 	 * Executes the move-Method of every Entity STEPS times with the delta-time dt
+	 * 
 	 * @param dt ,a float
 	 */
 	public void moveParticles(float dt) {
@@ -55,9 +55,9 @@ public class EManager {
 				}
 			}
 		}
-		if(Main.TRAILS) {
+		if (Main.TRAILS) {
 			for (Particle p : getParticles()) {
-				if (e != null) {
+				if (this.p != null) {
 					p.manageTrail();
 				}
 			}
@@ -65,64 +65,56 @@ public class EManager {
 	}
 
 	/**
-	 * Returns an Array of all Entities in the Game
+	 * Returns an Array of all Particles in the Game
 	 * 
 	 * @return Entity-Array
 	 */
-	public Entity[] getEntities() {
-		Entity[] e = new Entity[getNumberE()];
-		for (int i = 0; i < e.length; i++) {
-			e[i] = this.e[i];
-		}
-		return e;
-	}
-	
-	/**
-	 * Returns an Array of all Particles in the Game
-	 * 
-	 * @return Particle-Array
-	 */
 	public Particle[] getParticles() {
-		int j = 0;
 		Particle[] p = new Particle[getNumberP()];
-		for (int i = 0; i < e.length; i++) {
-			if(e[i] instanceof Particle && j < p.length) {
-				p[j] = (Particle) this.e[i];
-				j++;
-			}
+		for (int i = 0; i < p.length; i++) {
+			p[i] = this.p[i];
 		}
 		return p;
 	}
 
 	/**
-	 * Returns the Number of total Entities in the Game
+	 * Returns an Array of all Entities in the Game
 	 * 
-	 * @return Integer
+	 * @return Particle-Array
 	 */
-	public int getNumberE() {
-		for (int i = 0; i < e.length; i++) {
-			if (e[i] == null) {
-				return i;
-			}
+	public Entity[] getEntities() {
+		int l = getNumberP();
+		int m = 0;
+		if (mouseGravity) {
+			m++;
 		}
-		return e.length;
+		Entity[] e = new Entity[l + m];;
+		for (int i = 0; i < l; i++) {
+			e[i] = this.p[i];
+		}
+		if(mouseGravity) {
+			e[e.length - 1] = mouse;
+		}
+		return e;
 	}
-	
+
 	/**
 	 * Returns the Number of total Particles in the Game
 	 * 
 	 * @return Integer
 	 */
 	public int getNumberP() {
-		int p = 0;
-		for (int i = 0; i < e.length; i++) {
-			if (e[i] instanceof Particle) {
-				p++;
-			} else if(e[i] == null) {
-				return p;
+		for (int i = 0; i < p.length; i++) {
+			if (p[i] == null) {
+				return i;
 			}
 		}
-		return p;
+		return p.length;
+	}
+	
+	public void updateMousePos(float x, float y) {
+		mouse.pos.x = x;
+		mouse.pos.y = y;
 	}
 
 }
