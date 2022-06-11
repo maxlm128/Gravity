@@ -10,12 +10,14 @@ public class GUI extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private Particle[] p;
 	private int numberP;
+	private float mspf;
 	private Error err;
 	static protected final int WIDTH = 1440;
 	static protected final int HEIGHT = 1080;
 	private Camera c;
 
 	public GUI(Listener l) {
+		mspf = 0;
 		c = new Camera();
 		JFrame jFrame = new JFrame();
 		jFrame.addMouseListener(l);
@@ -39,6 +41,7 @@ public class GUI extends JPanel {
 		g2d.fillRect(0, 0, WIDTH, HEIGHT);
 		g2d.setColor(Color.WHITE);
 		g2d.drawString("Entities: " + numberP, 1, 10);
+		g2d.drawString("Frame-Time: " + mspf + " ms", 1, 20);
 		for (Particle p : p) {
 			g2d.fillOval(Math.round((p.pos.x - p.r + c.pos.x) * c.scale) + WIDTH / 2,
 					Math.round((p.pos.y - p.r + c.pos.y) * c.scale) + HEIGHT / 2, (int) (p.r * 2 * c.scale),
@@ -60,7 +63,7 @@ public class GUI extends JPanel {
 			}
 		}
 		if (err != null) {
-			g2d.drawString("Error: " + err.err, 1, 20);
+			g2d.drawString("Error: " + err.err, 1, 30);
 			if (err.isOlderThan(5000)) {
 				err = null;
 			}
@@ -82,7 +85,8 @@ public class GUI extends JPanel {
 	 * @param e       ,Entity-Array of all Entities
 	 * @param numberE ,Number of Total Entities
 	 */
-	public void executeRender(Particle[] p, int numberP) {
+	public void executeRender(Particle[] p, float mspf, int numberP) {
+		this.mspf = mspf * 1000;
 		this.p = p;
 		this.numberP = numberP;
 		repaint();

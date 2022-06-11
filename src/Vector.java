@@ -64,6 +64,15 @@ public class Vector {
 	}
 
 	/**
+	 * Returns the length of the Vector squared, therefore faster
+	 * 
+	 * @return A float of the sqared lenght
+	 */
+	public float lsq() {
+		return (float) x * x + y * y;
+	}
+
+	/**
 	 * Resets the Vector to be x = 0 and y = 0
 	 */
 	public void reset() {
@@ -79,16 +88,16 @@ public class Vector {
 	public Vector copy() {
 		return new Vector(x, y);
 	}
-	
 
 	/**
 	 * Rotates this vector by 90 degrees clockwise
+	 * 
 	 * @return this vector
 	 */
 	public Vector rotate90() {
-	 float tx = x;
-	 x = y;
-	 y = -tx;
-	 return this;
+		float tx = x;
+		x = -y;
+		y = tx;
+		return this;
 	}
 }

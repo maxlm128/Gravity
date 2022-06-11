@@ -10,7 +10,7 @@ public class Particle extends Entity {
 		super(x, y, m, eM);
 		vel = new Vector(vx, vy);
 		if (Main.TRAILS) {
-			trail = new float[Main.FPS * 200][2];
+			trail = new float[(1000 / Main.MSPF) * 200][2];
 		}
 		this.r = r;
 	}
@@ -19,18 +19,26 @@ public class Particle extends Entity {
 	 * Moves the Particle by the vel-Vector
 	 */
 	public void move(float dt) {
-		pos.add(vel.copy().scl(dt));
-		calcGravity(dt);
+//		long t = System.nanoTime();
 		resolveCollision();
+//		System.out.println("Calculate Collision: " + (System.nanoTime() - t));
+//		t = System.nanoTime();
+		calcGravity(dt);
+//		System.out.println("Calculate Gravity :" + (System.nanoTime() - t));
+		pos.add(vel.copy().scl(dt));
 	}
 
 	/**
 	 * Calculates the gravity torwards all other Entities which are not colliding
-	 * and applies the accelleration to the Vector acc using the Runge-Kutta-Method
+	 * and applies the accelleration to the Vector acc using Eulers-Method for now
 	 */
 	private void calcGravity(float dt) {
 		for (Entity e : eM.getEntities()) {
-			if (e != this) {
+			if (e != this && e != null) {
+//				EULER:
+				
+				vel.add(pos.sub(e.pos).n().scl((float) (G * e.m / (pos.sub(e.pos).lsq()))).scl(dt));
+
 //					Vector nextPos = pos.copy().add(vel);
 //					Vector vel1 = vel.copy().add(
 //							pos.sub(e.pos).n().scl((float) (G * e.m / Math.pow((pos.sub(e.pos).l()), 2))));
@@ -38,10 +46,7 @@ public class Particle extends Entity {
 //							.scl((float) (G * e.m / Math.pow((nextPos.sub(e.pos).l()), 2))));
 //					vel.x = (vel1.x + vel2.x) / 2;
 //					vel.y = (vel1.y + vel2.y) / 2;
-
-//					EULER:
-				vel.add(pos.sub(e.pos).n().scl((float) (G * e.m / Math.pow((pos.sub(e.pos).l()), 2))).scl(dt));
-
+//
 //					RUNGE-KUTTA:
 //					Vector k1 = vel.copy().add(pos.sub(e.pos).n().scl((float) (G * e.m / Math.pow((pos.sub(e.pos).l()), 2))).scl(dt));
 //					
@@ -56,6 +61,7 @@ public class Particle extends Entity {
 //					
 //					vel.x = (k1.x + (k2.x * 2) + (k3.x * 2) + k4.x) / 6;
 //					vel.y = (k1.y + (k2.y * 2) + (k3.y * 2) + k4.y) / 6;
+//
 			}
 		}
 	}
@@ -67,15 +73,16 @@ public class Particle extends Entity {
 	private void resolveCollision() {
 		for (Particle p : eM.getParticles()) {
 			if (p != this && pos.sub(p.pos).l() <= p.r + r) {
+				if (pos.x == p.pos.x && pos.y == p.pos.y) {
+					Vector random = new Vector((float) Math.random() - 0.5f, (float) Math.random() - 0.5f);
+					pos.add(random);
+				}
 				Vector d = pos.sub(p.pos).n().scl(p.r + r - pos.sub(p.pos).l()).scl(0.5f);
 //				Vector d = pos.sub(p.pos).n().scl(50000 / pos.sub(p.pos).l());
 				p.pos.add(d);
 				pos.add(d.scl(-1));
-			}
-		}
-		for (Particle p : eM.getParticles()) {
-			// Distance between balls
-			if (p != this && pos.sub(p.pos).l() <= p.r + r) {
+				// Soft Collision
+				// Distance between balls
 				float fDistance = pos.sub(p.pos).l();
 
 				// Normal
@@ -117,5 +124,4 @@ public class Particle extends Entity {
 		trail[trailIndex][0] = pos.x;
 		trail[trailIndex][1] = pos.y;
 	}
-
 }

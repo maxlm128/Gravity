@@ -60,7 +60,7 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 			lastDragPos.x = e.getX();
 			lastDragPos.y = e.getY();
 		}
-		m.reactToInput(getLastButton());
+		m.reactToInput(getLastButton(), getScrollAmount());
 	}
 
 	@Override

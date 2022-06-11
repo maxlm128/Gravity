@@ -3,17 +3,17 @@
 public class EManager {
 	private Particle[] p;
 	private Entity mouse;
-	private final int PARTICLE_LIMIT = 5000;
+	private final int PARTICLE_LIMIT = 1000;
 	boolean mouseGravity;
 	private int lastIndex;
 
 	public EManager() {
 		mouseGravity = false;
-		mouse = new Entity(0, 0, 1E25f, this);
+		mouse = new Entity(0, 0, 5E25f, this);
 		p = new Particle[PARTICLE_LIMIT];
 		// Density of a Neutron Star
-		newParticle(0, 0, (float) (Math.PI * Math.pow(10000, 2) * 2E14), 10000, 0, 0);
-		newParticle(0, 100000, (float) (Math.PI * Math.pow(10000, 2) * 2E14), 10000, 0, 0);
+		newParticle(0, 0, (float) (Math.PI * Math.pow(10000000, 2) * 2E14), 1000000, 0, 0);
+		newParticle(0, 10000000, (float) (Math.PI * Math.pow(10000000, 2) * 2E14), 1000000, 0, 0);
 	}
 
 	/**
@@ -112,9 +112,12 @@ public class EManager {
 		return p.length;
 	}
 	
-	public void updateMousePos(float x, float y) {
-		mouse.pos.x = x;
-		mouse.pos.y = y;
+	/**
+	 * Updates the position of the mouse and therefore the source of gravity using a position vector
+	 * @param pos, a Vector
+	 */
+	public void updateMousePos(Vector pos) {
+		mouse.pos = pos;
 	}
 
 }
