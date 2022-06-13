@@ -50,17 +50,6 @@ public class GUI extends JPanel {
 					Math.round((p.pos.y + c.pos.y) * c.scale) + HEIGHT / 2,
 					Math.round((p.pos.x + c.pos.x) * c.scale) + WIDTH / 2,
 					Math.round((p.pos.y + c.pos.y) * c.scale) + HEIGHT / 2);
-			if (Main.TRAILS) {
-				for (int i = 0; i < p.trail.length; i++) {
-					int index = (i + p.trailIndex) % (p.trail.length - 1);
-					if (p.trail[index][0] != 0f && p.trail[index][1] != 0f) {
-						g2d.drawLine(Math.round((p.trail[index][0] + c.pos.x) * c.scale) + WIDTH / 2,
-								Math.round((p.trail[index][1] + c.pos.y) * c.scale) + HEIGHT / 2,
-								Math.round((p.trail[index][0] + c.pos.x) * c.scale) + WIDTH / 2,
-								Math.round((p.trail[index][1] + c.pos.y) * c.scale) + HEIGHT / 2);
-					}
-				}
-			}
 		}
 		if (err != null) {
 			g2d.drawString("Error: " + err.err, 1, 30);

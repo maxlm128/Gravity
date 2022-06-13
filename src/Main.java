@@ -4,25 +4,23 @@ public class Main {
 
 	private final GUI gui;
 	private final Listener l;
-	private final EManager eM;
-	static final int MSPF = 1000 / 144 ;//(144 FPS)
+	private final EntityManager eM;
 	private long lastTimestamp;
 	private long lastTimestamp2;
-	static final int SPEED = 1;
-	static final int STEPS = 10 * SPEED;
-	static final boolean TRAILS = false;
+	static final int SPEED = 3600; // Ingame Seconds per real Second
+	static final int STEPS = 100;
+	static final int MSPF = 1000 / 144;// Milliseconds per frame
 
 	public static void main(String args[]) {
 		new Main();
 	}
 
 	public Main() {
-		eM = new EManager();
+		eM = new EntityManager();
 		l = new Listener(this);
 		gui = new GUI(l);
 		lastTimestamp = System.nanoTime();
 		lastTimestamp2 = (long) (System.nanoTime() * 1E-6);
-		;
 		mainLoop();
 	}
 
@@ -32,11 +30,11 @@ public class Main {
 	private void mainLoop() {
 		float dt;
 		while (true) {
+			sleep();
 			dt = getDeltaTime();
 			reactToInput(l.getLastButton(), l.getScrollAmount());
 			gui.executeRender(eM.getParticles(), dt, eM.getNumberP());
-			eM.moveParticles(dt * SPEED);
-			sleep();
+			eM.moveParticles((dt * SPEED));
 		}
 	}
 
@@ -65,7 +63,7 @@ public class Main {
 			if (pos != null) {
 				if (!eM.mouseGravity) {
 					pos = screenToGamePos(pos);
-					if (!eM.newParticle(0, 10000000, (float) (Math.PI * Math.pow(10000000, 2) * 2E14), 1000000, 0, 0)) {
+					if (!eM.newParticle(pos.x, pos.y, 5.972E24f, 6.371E6f, 0, 0)) {
 						gui.drawErr("Max Number of Entities reached!");
 					}
 				} else {
@@ -103,6 +101,12 @@ public class Main {
 		return dt;
 	}
 
+	/**
+	 * Converts one Position on the Screen to a Position of the ingame coorinates
+	 * 
+	 * @param pos ,the Coordinates on the screen in form of a Vector
+	 * @return The Vector of the Position on the screen
+	 */
 	private Vector screenToGamePos(Vector pos) {
 		pos.x = ((pos.x - GUI.WIDTH / 2) / gui.getCamera().scale) - gui.getCamera().pos.x;
 		pos.y = ((pos.y - GUI.HEIGHT / 2) / gui.getCamera().scale) - gui.getCamera().pos.y;
