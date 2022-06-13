@@ -23,6 +23,7 @@ public class GUI extends JPanel {
 		jFrame.addMouseListener(l);
 		jFrame.addMouseMotionListener(l);
 		jFrame.addMouseWheelListener(l);
+		jFrame.addKeyListener(l);
 		jFrame.add(this);
 		jFrame.setSize(WIDTH, HEIGHT);
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

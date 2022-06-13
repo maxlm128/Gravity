@@ -88,16 +88,4 @@ public class Vector {
 	public Vector copy() {
 		return new Vector(x, y);
 	}
-
-	/**
-	 * Rotates this vector by 90 degrees clockwise
-	 * 
-	 * @return this vector
-	 */
-	public Vector rotate90() {
-		float tx = x;
-		x = -y;
-		y = tx;
-		return this;
-	}
 }

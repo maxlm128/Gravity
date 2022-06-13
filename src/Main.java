@@ -7,8 +7,10 @@ public class Main {
 	private final EntityManager eM;
 	private long lastTimestamp;
 	private long lastTimestamp2;
-	static final int SPEED = 3600; // Ingame Seconds per real Second
-	static final int STEPS = 100;
+	private boolean running;
+	static final float SPEED = 23.25f * 60f; // Ingame Seconds per real Second (One ISS Orbit per 4 Seconds)
+//	static final float SPEED = 86400; // Ingame Seconds per real Second (1 Day per Second)
+	static final int STEPS = 10;
 	static final int MSPF = 1000 / 144;// Milliseconds per frame
 
 	public static void main(String args[]) {
@@ -21,6 +23,7 @@ public class Main {
 		gui = new GUI(l);
 		lastTimestamp = System.nanoTime();
 		lastTimestamp2 = (long) (System.nanoTime() * 1E-6);
+		running = true;
 		mainLoop();
 	}
 
@@ -32,33 +35,39 @@ public class Main {
 		while (true) {
 			sleep();
 			dt = getDeltaTime();
-			reactToInput(l.getLastButton(), l.getScrollAmount());
+			reactToInput(l.getLastMouseButton(), l.getLastKeyInput(), l.getScrollAmount());
 			gui.executeRender(eM.getParticles(), dt, eM.getNumberP());
-			eM.moveParticles((dt * SPEED));
+			if (running) {
+				eM.moveParticles((dt * SPEED));
+			}
 		}
 	}
 
 	/**
-	 * Reacts to Inputs given
+	 * Reacts to Inputs given from Keyboard and Mouse
 	 * 
-	 * @param lastInput ,a Integer of the Id of Input
-	 * @param scroll    ,a Integer for the distance scrolled
+	 * @param lastMouseInput ,a Integer of the Id of the last Mouse Input
+	 * @param lastKeyInput   ,a Integer of the Id of the last Keyboard Input
+	 * @param scroll         ,a Integer for the distance scrolled
 	 */
-	protected void reactToInput(int lastInput, int scroll) {
-		if (scroll != 0) {
-			gui.getCamera().zoomCamera(scroll);
-		}
+	protected void reactToInput(int lastMouseInput, char lastKeyInput, int scroll) {
+		// Update of Mouse-Position
 		if (eM.mouseGravity) {
 			eM.updateMousePos(screenToGamePos(l.getMousePosition()));
 		}
-		switch (lastInput) {
-		case 1:
+		// Reaction to scrolling
+		if (scroll != 0) {
+			gui.getCamera().zoomCamera(scroll);
+		}
+		// Reaction to Mouse-Inputs
+		switch (lastMouseInput) {
+		case Listener.LEFT_KLICK:
 			gui.getCamera().moveCamera(l.getMouseMovement());
 			break;
-		case 2:
+		case Listener.MIDDLE_KLICK:
 			eM.deleteAllEntities();
 			break;
-		case 3:
+		case Listener.RIGHT_KLICK:
 			Vector pos = l.getMousePosition();
 			if (pos != null) {
 				if (!eM.mouseGravity) {
@@ -71,13 +80,24 @@ public class Main {
 				}
 			}
 			break;
-		case 4:
+		case Listener.MOUSE_BACKWARDS:
 			eM.mouseGravity = !eM.mouseGravity;
 			eM.updateMousePos(screenToGamePos(l.getMousePosition()));
 			break;
 		}
+		// Reaction to Keyboard Inputs
+		switch (lastKeyInput) {
+		case Listener.KEYBOARD_SPACE:
+			running = !running;
+			break;
+		}
 	}
 
+	/**
+	 * Sleeps for the time of MSPF minus the time the calculation of the remaining
+	 * components, exept the time needed for the calculation is greater than MSPF,
+	 * therefore trying to reach the target-frametime of MSPF
+	 */
 	private void sleep() {
 		int t = (int) (System.nanoTime() * 1E-6 - lastTimestamp2);
 		if (t < MSPF) {
