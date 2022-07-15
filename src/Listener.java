@@ -17,9 +17,9 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 	private int scroll;
 	private Main m;
 	final int EMPTY = 0;
-	static final int LEFT_KLICK = 1;
-	static final int MIDDLE_KLICK = 2;
-	static final int RIGHT_KLICK = 3;
+	static final int MOUSE_LEFT_KLICK = 1;
+	static final int MOUSE_MIDDLE_KLICK = 2;
+	static final int MOUSE_RIGHT_KLICK = 3;
 	static final int MOUSE_BACKWARDS = 4;
 	static final int MOUSE_FORWARD = 5;
 	static final char KEYBOARD_SPACE = ' ';
@@ -60,7 +60,7 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 	 * @return a Vector
 	 */
 	public Vector getMousePosition() {
-		if (lastMouseButton == RIGHT_KLICK) {
+		if (lastMouseButton == MOUSE_RIGHT_KLICK) {
 			lastMouseButton = EMPTY;
 		}
 		return mousePos.copy();
@@ -101,13 +101,13 @@ public class Listener implements MouseListener, MouseMotionListener, MouseWheelL
 	@Override
 	public void mousePressed(MouseEvent e) {
 		switch (e.getButton()) {
-		case LEFT_KLICK:
+		case MOUSE_LEFT_KLICK:
 			lastDragPos.x = e.getX();
 			lastDragPos.y = e.getY();
-			lastMouseButton = LEFT_KLICK;
+			lastMouseButton = MOUSE_LEFT_KLICK;
 			break;
-		case RIGHT_KLICK:
-		case MIDDLE_KLICK:
+		case MOUSE_RIGHT_KLICK:
+		case MOUSE_MIDDLE_KLICK:
 		case MOUSE_BACKWARDS:
 		case MOUSE_FORWARD:
 			lastMouseButton = e.getButton();

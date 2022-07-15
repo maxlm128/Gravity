@@ -9,7 +9,7 @@ public class EntityManager {
 
 	public EntityManager() {
 		mouseGravity = false;
-		mouse = new Entity(0, 0, 5E27f, this);
+		mouse = new Entity(0, 0, 5E27f);
 		p = new Particle[0];
 		newParticle(0, 6.371E6f + 400000, 440000, 55, 7660, 0); // ISS
 		newParticle(0, 0, 5.972E24f, 6.371E6f, 0, 0); // Earth
@@ -35,7 +35,7 @@ public class EntityManager {
 		for (int i = 0; i < this.p.length; i++) {
 			p[i] = this.p[i];
 		}
-		p[p.length - 1] = new Particle(x, y, m, r, vx, vy, this);
+		p[p.length - 1] = new Particle(x, y, m, r, vx, vy);
 		this.p = p;
 		return true;
 	}

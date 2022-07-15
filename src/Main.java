@@ -8,8 +8,8 @@ public class Main {
 	private long lastTimestamp;
 	private long lastTimestamp2;
 	private boolean running;
-	static final float SPEED = 23.25f * 60f; // Ingame Seconds per real Second (One ISS Orbit per 4 Seconds)
-//	static final float SPEED = 86400; // Ingame Seconds per real Second (1 Day per Second)
+	static final float SPEED = 3600; // Ingame Seconds per real Second (One ISS Orbit per 4 Seconds)
+//	static final float SPEED = 86400 * 29; // Ingame Seconds per real Second (1 Day per Second)
 	static final int STEPS = 10;
 	static final int MSPF = 1000 / 144;// Milliseconds per frame
 
@@ -61,13 +61,13 @@ public class Main {
 		}
 		// Reaction to Mouse-Inputs
 		switch (lastMouseInput) {
-		case Listener.LEFT_KLICK:
+		case Listener.MOUSE_LEFT_KLICK:
 			gui.getCamera().moveCamera(l.getMouseMovement());
 			break;
-		case Listener.MIDDLE_KLICK:
+		case Listener.MOUSE_MIDDLE_KLICK:
 			eM.deleteAllEntities();
 			break;
-		case Listener.RIGHT_KLICK:
+		case Listener.MOUSE_RIGHT_KLICK:
 			Vector pos = l.getMousePosition();
 			if (pos != null) {
 				if (!eM.mouseGravity) {

@@ -60,7 +60,7 @@ public class Vector {
 	 * @return A float of the length
 	 */
 	public float l() {
-		return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+		return (float) Math.sqrt(lsq());
 	}
 
 	/**
